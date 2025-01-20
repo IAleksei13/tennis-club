@@ -1,0 +1,873 @@
+@font-face {
+  font-family: "Gilroy";
+  src: url("./fonts/Gilroy-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("./fonts/Gilroy-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("./fonts/Gilroy-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("./fonts/Gilroy-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/**
+  Нормализация блочной модели
+ */
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+/**
+   Убираем внутренние отступы слева тегам списков,
+   у которых есть атрибут class
+  */
+:where(ul, ol):where([class]) {
+  padding-left: 0;
+}
+
+/**
+   Убираем внешние отступы body и двум другим тегам,
+   у которых есть атрибут class
+  */
+body,
+:where(blockquote, figure):where([class]) {
+  margin: 0;
+}
+
+/**
+   Убираем внешние отступы вертикали нужным тегам,
+   у которых есть атрибут class
+  */
+:where(h1, h2, h3, h4, h5, h6, p, ul, ol, dl):where([class]) {
+  margin-block: 0;
+}
+
+:where(dd[class]) {
+  margin-left: 0;
+}
+
+:where(fieldset[class]) {
+  margin-left: 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+   Убираем стандартный маркер маркированному списку,
+   у которого есть атрибут class
+  */
+:where(ul[class]) {
+  list-style: none;
+}
+
+:where(address[class]) {
+  font-style: normal;
+}
+
+/**
+   Обнуляем вертикальные внешние отступы параграфа,
+   объявляем локальную переменную для внешнего отступа вниз,
+   чтобы избежать взаимодействие с более сложным селектором
+  */
+p {
+  --paragraphMarginBottom: 24px;
+
+  margin-block: 0;
+}
+
+/**
+   Внешний отступ вниз для параграфа без атрибута class,
+   который расположен не последним среди своих соседних элементов
+  */
+p:where(:not([class]):not(:last-child)) {
+  margin-bottom: var(--paragraphMarginBottom);
+}
+
+/**
+   Упрощаем работу с изображениями и видео
+  */
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/**
+   Наследуем свойства шрифт для полей ввода
+  */
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+html {
+  /**
+     Пригодится в большинстве ситуаций
+     (когда, например, нужно будет "прижать" футер к низу сайта)
+    */
+  height: 100%;
+  /**
+     Убираем скачок интерфейса по горизонтали
+     при появлении / исчезновении скроллбара
+    */
+  scrollbar-gutter: stable;
+}
+
+/**
+   Плавный скролл
+  */
+html,
+:has(:target) {
+  scroll-behavior: smooth;
+}
+
+body {
+  /**
+     Пригодится в большинстве ситуаций
+     (когда, например, нужно будет "прижать" футер к низу сайта)
+    */
+  min-height: 100%;
+  /**
+     Унифицированный интерлиньяж
+    */
+  line-height: 1.5;
+}
+
+/**
+   Нормализация высоты элемента ссылки при его инспектировании в DevTools
+  */
+a:where([class]) {
+  display: inline-flex;
+}
+
+/**
+   Курсор-рука при наведении на элемент
+  */
+button,
+label {
+  cursor: pointer;
+}
+
+/**
+   Приводим к единому цвету svg-элементы
+   (за исключением тех, у которых уже указан
+   атрибут fill со значением 'none' или начинается с 'url')
+  */
+:where([fill]:not([fill="none"], [fill^="url"])) {
+  fill: currentColor;
+}
+
+/**
+   Приводим к единому цвету svg-элементы
+   (за исключением тех, у которых уже указан
+   атрибут stroke со значением 'none')
+  */
+:where([stroke]:not([stroke="none"], [stroke^="url"])) {
+  stroke: currentColor;
+}
+
+/**
+   Чиним баг задержки смены цвета при взаимодействии с svg-элементами
+  */
+svg * {
+  transition-property: fill, stroke;
+}
+
+/**
+   Приведение рамок таблиц в классический 'collapse' вид
+  */
+:where(table) {
+  border-collapse: collapse;
+  border-color: currentColor;
+}
+
+/**
+   Удаляем все анимации и переходы для людей,
+   которые предпочитают их не использовать
+  */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root {
+  --color-light: #ffffff;
+  --color-dark: #333333;
+  --color-accent: #8d86c9;
+  --sub-accent: #f7ece1;
+
+  --font-familly-base: "Gilroy", sans-serif;
+
+  --container-width: 1300px;
+  --container-padding-x: 15px;
+
+  --transition-duration: 0.2s;
+}
+
+body {
+  font-family: var(--font-familly-base);
+  font-weight: 400px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-dark);
+  background-color: var(--color-light);
+}
+a,
+button,
+input,
+textarea,
+svg * {
+  transition-duration: var(--transition-duration);
+}
+
+a {
+  color: var(--color-light);
+}
+
+a:hover {
+  color: var(--color-accent);
+}
+
+.container {
+  max-width: calc(var(--container-width) + var(--container-padding-x) * 2);
+  margin-inline: auto;
+  padding-inline: var(--container-padding-x);
+}
+
+.container-wide {
+  max-width: 1320px;
+  margin-inline: auto;
+}
+
+.container-narrow {
+  max-width: 1076px;
+  margin-inline: auto;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  border: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  clip-path: inset(100%) !important;
+  clip: rect(0 0 0 0) !important;
+  overflow: hidden !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+}
+
+.section-title {
+  font-size: clamp(24px, 1.88vw, 36px);
+}
+
+.menu-list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 40px;
+}
+
+.menu-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.header-menu-link {
+  height: 106px;
+}
+
+.header-soc1als-list {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.banner {
+  position: relative;
+  z-index: -1;
+  height: 1000px;
+  margin-top: -106px;
+  padding-top: 306px;
+  background: url(/images/header-background.png) center/cover no-repeat;
+  color: var(--color-light);
+}
+
+.banner::after {
+  position: absolute;
+  top: 106px;
+  background-color: var(--color-light);
+  opacity: 0.3;
+  content: "";
+  height: 1px;
+  width: 100vw;
+}
+
+.banner-title {
+  max-width: 636px;
+  font-size: clamp(25px, 2.5vw, 48px);
+  padding-bottom: 60px;
+}
+
+.banner-video-play {
+  max-width: 268px;
+  display: flex;
+  column-gap: 30px;
+  align-items: center;
+}
+
+.banner-video-title {
+  font-size: clamp(12px, 0.94vw, 18px);
+  font-weight: 600;
+}
+
+.video-play-border {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  aspect-ratio: 1;
+  border: 1px solid var(--sub-accent);
+  border-radius: 50%;
+}
+
+.video-play-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
+  aspect-ratio: 1;
+  background-color: var(--color-accent);
+  border-radius: 50%;
+}
+
+.banner-list {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  column-gap: 12px;
+}
+
+.banner-card {
+  position: relative;
+  width: clamp(230px, 16.4vw, 315px);
+  height: 151px;
+  background-color: var(--color-accent);
+}
+
+.baner-card-info {
+  padding: 35px;
+}
+
+.banner-card-subtitle {
+  font-size: clamp(12px, 0.94vw, 18px);
+  font-weight: 600;
+  padding-bottom: 17px;
+}
+
+.card-item-title {
+  font-size: clamp(18px, 1.25vw, 24px);
+  font-weight: 700;
+}
+
+.banner-card-link {
+  position: absolute;
+  right: 35px;
+  bottom: 49px;
+}
+
+.courts {
+  padding-top: 150px;
+}
+
+.courts-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.courts-wrapper {
+  border: 1px solid var(--sub-accent);
+}
+
+.courts-card {
+  position: relative;
+  padding: 25px 20px;
+  font-size: clamp(16px, 1.4vw, 27px);
+  font-weight: 700;
+  color: var(--color-light);
+}
+
+.courts-card-image {
+  filter: brightness(60%);
+}
+
+.courts-card-title {
+  position: absolute;
+  bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.club-history {
+  display: flex;
+  justify-content: end;
+  padding-top: 150px;
+}
+
+.club-card {
+  position: relative;
+  max-width: 636px;
+  background-color: var(--sub-accent);
+  padding-left: 146px;
+  padding-top: 70px;
+}
+
+.club-card::before {
+  content: "";
+  position: absolute;
+  right: clamp(280px, 51.9vw, 555px);
+  top: 50%;
+  translate: 0 -50%;
+  background: url(./images/motivation-image.png) center/contain no-repeat;
+  display: inline-block;
+  width: clamp(320px, 27.4vw, 526px);
+  height: clamp(320px, 26.77vw, 514px);
+}
+
+.club-card-title {
+  margin-bottom: 25px;
+  font-size: clamp(24px, 1.88vw, 36px);
+  font-weight: 700;
+}
+
+.club-card-info {
+  max-width: 430px;
+  margin-bottom: 25px;
+  margin-right: 60px;
+}
+
+.card-motivation-list {
+  max-width: 400px;
+  margin-bottom: 84px;
+}
+
+.card-motivation-title {
+  margin-bottom: 25px;
+  font-size: clamp(16px, 1.09vw, 21px);
+}
+
+.card-motivation-elem {
+  position: relative;
+  display: flex;
+}
+
+.card-motivation-elem:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.card-motivation-elem::before {
+  content: "";
+  position: absolute;
+  left: -23px;
+  top: 50%;
+  translate: 0 -50%;
+  height: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+}
+
+.coaching {
+  padding-top: 150px;
+}
+
+.coaching-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination {
+  display: flex;
+  column-gap: 15px;
+}
+
+.pagination-button {
+  text-align: center;
+  height: 45px;
+  padding: 7px;
+  aspect-ratio: 1;
+  color: var(--color-light);
+  background-color: var(--color-accent);
+  border: none;
+}
+
+.pagination-button:hover {
+  color: var(--color-accent);
+  background-color: var(--color-dark);
+}
+
+.coaching-list {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  column-gap: 24px;
+  padding-top: 74px;
+}
+
+.coaching-catd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coaching-image-wrapper {
+  padding-inline: 15px;
+  border: 1px solid var(--sub-accent);
+}
+
+.coaching-name {
+  padding-top: 25px;
+  font-size: clamp(16px, 1.09vw, 21px);
+  max-width: 196px;
+}
+
+.coaching-info {
+  max-width: 196px;
+  text-align: center;
+  padding-top: 15px;
+}
+
+.office {
+  display: flex;
+  column-gap: 10px;
+  justify-content: space-between;
+  padding-top: 150px;
+}
+
+.prises {
+  width: 526px;
+}
+
+.prises-list {
+  padding-top: 75px;
+}
+
+.prises-elem {
+  position: relative;
+  display: block;
+  background-color: var(--color-accent);
+  padding: 15px 30px;
+}
+
+.prises-elem:not(:last-child) {
+  margin-bottom: 30px;
+}
+
+.prises-elem::after {
+  position: absolute;
+  content: "";
+  height: 30px;
+  aspect-ratio: 1;
+  background: url(./icons/left.svg) center/contain no-repeat;
+  right: 30px;
+}
+
+.prises-link {
+  font-size: clamp(16px, 1.09vw, 21px);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.prises-link:hover {
+  color: var(--color-dark);
+}
+
+.services-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.services-body {
+  position: relative;
+  margin-top: 75px;
+  padding: 30px 25px;
+  color: var(--color-light);
+  font-size: clamp(16px, 1.4vw, 27px);
+  border: 1px solid var(--sub-accent);
+}
+
+.services-body-title {
+  position: absolute;
+  left: 65px;
+  bottom: 65px;
+}
+
+.footer {
+  background-color: var(--sub-accent);
+}
+
+.footer-wrapper {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 104px;
+  align-items: center;
+
+  margin-top: 150px;
+}
+
+.copyright {
+  opacity: 0.3;
+}
+
+.footer-menu-link {
+  height: 96px;
+  color: var(--color-dark);
+}
+
+.footer-soc1als-list {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 19px;
+}
+
+.footer-soc1als-link {
+  color: var(--color-accent);
+}
+
+.footer-soc1als-link:hover {
+  color: var(--color-dark);
+}
+
+@media (max-width: 1320px) {
+  .banner-list {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .club-card {
+    padding-top: 40px;
+  }
+
+  .card-motivation-list {
+    margin-bottom: 40px;
+  }
+
+  .coaching {
+    padding-top: 75px;
+  }
+
+  .coaching-list {
+    padding-top: 50px;
+  }
+
+  .office {
+    padding-top: 70px;
+  }
+
+  .prises-list {
+    padding-top: 35px;
+  }
+
+  .services-body {
+    margin-top: 25px;
+  }
+
+  .footer-menu-link {
+    height: 60px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .header {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .header-menu {
+    order: 1;
+    flex-basis: 100%;
+  }
+
+  .header-menu-link {
+    height: 50px;
+  }
+
+  .banner-card {
+    height: 100px;
+  }
+
+  .baner-card-info {
+    padding: 15px;
+  }
+
+  .banner {
+    height: 660px;
+    padding-top: 160px;
+  }
+
+  .courts {
+    padding-top: 60px;
+  }
+
+  .club-history {
+    display: flex;
+    justify-content: center;
+  }
+
+  .club-card {
+    padding-left: 80px;
+  }
+
+  .club-card::before {
+    display: none;
+  }
+
+  .coaching-list {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 10px;
+  }
+
+  .coaching {
+    padding-top: 70px;
+  }
+
+  .coaching-name {
+    padding-top: 15px;
+  }
+
+  .office {
+    display: flex;
+    column-gap: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .prises {
+    width: 100%;
+  }
+
+  .services {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-top: 35px;
+  }
+
+  .services-body {
+    padding: 0px;
+    margin-inline: auto;
+  }
+
+  .footer-menu-link {
+    height: 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .header {
+    row-gap: 5px;
+  }
+
+  .header-menu-link {
+    height: 30px;
+  }
+
+  .header-soc1als-list {
+    column-gap: 10px;
+  }
+
+  .courts-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .courts {
+    padding-top: 30px;
+  }
+
+  .club-history {
+    text-align: center;
+    padding-top: 60px;
+  }
+
+  .club-card {
+    padding-left: 45px;
+  }
+
+  .coaching-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .coaching {
+    padding-top: 50px;
+  }
+
+  .footer-wrapper {
+    flex-direction: column;
+  }
+
+  .copyright {
+    padding-block: 10px;
+  }
+}
+
+@media (max-width: 484px) {
+  .banner {
+    height: 900px;
+    margin-top: -141px;
+  }
+}
